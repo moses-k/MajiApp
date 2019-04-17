@@ -9,29 +9,27 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,10 +50,10 @@ public class dashboard extends AppCompatActivity {
     private RecyclerView postList;
     private WebView webView;
     private FirebaseAuth mAuth;
-    private DatabaseReference UserRef, postsRef;
+    private DatabaseReference UserRef,TechnicianRef, postsRef;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private CircleImageView NavProfileImage;
-    String currentUserID;
+    String currentUserID, User;
     private View navView;
 
 
@@ -64,10 +62,20 @@ public class dashboard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         setContentView(R.layout.activity_dashboard);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+
+        //CHECK IF USER OR TECHNICIAN
+       // User = getIntent().getExtras().get("Members").toString();
+
         mAuth = FirebaseAuth.getInstance();
-        UserRef  = FirebaseDatabase.getInstance().getReference().child("Users");
-        postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        UserRef  = FirebaseDatabase.getInstance().getReference().child("users");
+        TechnicianRef  = FirebaseDatabase.getInstance().getReference().child("users");
+        currentUserID = mAuth.getUid();
+
+        postsRef = FirebaseDatabase.getInstance().getReference().child("Reports");
         mAuth.getCurrentUser().getUid();
 
         postList = (RecyclerView) findViewById(R.id.all_users_post_view);
@@ -113,6 +121,50 @@ public class dashboard extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        //check who the current user is either USER OR TECHNICIAN
+
+        UserRef.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.child(currentUserID).child("Member").exists())
+                {
+                    User = "user";
+
+                }else {
+
+
+                    TechnicianRef.addValueEventListener(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            if(dataSnapshot.child(currentUserID).child("Member").exists())
+                            {
+                                User = "technician";
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+
         DisplAllUsersPost();
     }
 
@@ -134,6 +186,7 @@ public class dashboard extends AppCompatActivity {
                     {
                         //get the key of that post and store in postkey
                         final String Postkey = getRef(position).getKey();
+                      //  final String User  = getIntent().getExtras().get("Members").toString();
 
                         holder.setFullname(model.getUserfullname());
                         holder.setTime(model.getTime());
@@ -152,6 +205,19 @@ public class dashboard extends AppCompatActivity {
                                  startActivity(clickpostIntent);
                             }
                         });
+
+                        holder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent commentsIntent = new Intent(dashboard.this, CommentsActivity.class);
+                                commentsIntent.putExtra("Postkey", Postkey);
+                                commentsIntent.putExtra("Members", User);
+                                startActivity(commentsIntent);
+                            }
+
+                        });
+
+
 
 
                     }
@@ -177,6 +243,7 @@ public class dashboard extends AppCompatActivity {
 
         //TextView username, postTime,postDate,postDescription,Postimage;
        // CircleImageView profileImage;
+        private ImageButton CommentPostButton;
 
 
         View mView;
@@ -184,6 +251,9 @@ public class dashboard extends AppCompatActivity {
          public PostViewHolder(View itemView) {
              super(itemView);
              mView = itemView;
+
+
+             CommentPostButton = (ImageButton) mView.findViewById(R.id.comment_button2);
 
              /*  username = (TextView) mView.findViewById(R.id.post_username);
                profileImage = (CircleImageView) mView.findViewById(R.id.post_profile_image);
@@ -239,7 +309,7 @@ public class dashboard extends AppCompatActivity {
     //check if user is authenticated
 
     private void sendUserToLoginActivity() {
-        startActivity(new Intent(this,Login.class));
+        startActivity(new Intent(this, User_Login.class));
     }
 
     //check for internet connectivity
@@ -283,7 +353,7 @@ public class dashboard extends AppCompatActivity {
     }
 
     public void Login () {
-        startActivity(new Intent(this, Login.class));
+        startActivity(new Intent(this, User_Login.class));
     }
 
 

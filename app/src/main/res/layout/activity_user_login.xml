@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="50dp"
+    android:background="@color/darkblue"
     android:paddingLeft="50dp"
     android:paddingRight="50dp"
     android:paddingTop="50dp"
-    tools:context=".Login">
-
+    tools:context=".User_Login">
+l
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,12 +19,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/technicianlink"
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Click here to Login as Technician"
+                android:textSize="20sp"
+                android:textColor="@color/backgroundcolor"
+                />
             <RelativeLayout
+                android:layout_below="@+id/technicianlink"
                 android:id="@+id/loginlayout"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/backgroundlgn">
+                android:background="@drawable/background_login">
 
                 <TextView
                     android:id="@+id/title"
@@ -125,7 +138,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:text="Don't have an Account,Need new Account?"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textColor="@color/backgroundcolor"
                 android:textSize="@dimen/activity_horizontal_margin" />
 
             <TextView
@@ -133,6 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btnSignup"
+                android:textColor="@color/backgroundcolor"
                 android:layout_marginTop="30dp"
                 android:layout_centerHorizontal="true"
                 android:text="or Login with"/>
@@ -152,8 +166,8 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/facebook_signin_button"
 
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/facebook" />
 
                 </RelativeLayout>
@@ -161,8 +175,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/twitter_signin_button"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="110dp"
                     android:src="@drawable/twitter" />
 
@@ -173,8 +187,8 @@
                     android:layout_marginLeft="200dp">
 
                     <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="35dp"
+                        android:layout_height="40dp"
                         android:id="@+id/google_signin_button"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
@@ -184,7 +198,11 @@
                 </RelativeLayout>
 
 
+
+
             </RelativeLayout>
+
+
 
 
 

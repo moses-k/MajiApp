@@ -56,7 +56,7 @@
                 android:layout_below="@+id/my_profile_username"
                 android:layout_marginTop="10dp"
                 android:padding="5dp"
-                android:text="hey i am using softaware app developed by Anonymous"
+                android:text="hey i am using softaware app developed by nyambega"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@android:color/darker_gray"

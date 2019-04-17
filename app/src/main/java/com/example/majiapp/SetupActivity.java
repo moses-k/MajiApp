@@ -46,22 +46,26 @@ public class SetupActivity extends AppCompatActivity {
     String currentUserID, downloadImageUrl;
     final static int Gallery_pick = 1;
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef;
+    private DatabaseReference UsersRef, TechnicianRef;
     private StorageReference userProfileImageRef;
     private FirebaseDatabase mFirebaseDatabase;
     //private StorageReference mStorageReference;
     private double mPhotoUploadProgress = 0;
     private Uri resultUri;
-    private String saveCurrentDate, saveCurrentTime, postRandomName, current_user_id;
+    private String User,Users,  saveCurrentDate, saveCurrentTime, postRandomName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
+
+
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        TechnicianRef = FirebaseDatabase.getInstance().getReference().child("technicians");
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         //create profile images folder in the storage
         userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
@@ -76,8 +80,6 @@ public class SetupActivity extends AppCompatActivity {
         SafesetupInfo = findViewById(R.id.setup_saveinfo);
         ProfileImage = (CircleImageView) findViewById(R.id.setup_profile_image);
         loadingBar = new ProgressDialog(this);
-
-
 
 
         SafesetupInfo.setOnClickListener(new View.OnClickListener() {
@@ -100,12 +102,13 @@ public class SetupActivity extends AppCompatActivity {
         });
 
         //iporun pichait  en profile
-        UsersRef.addValueEventListener(new ValueEventListener() {
+        UsersRef.addValueEventListener(new ValueEventListener()
+        {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    if (dataSnapshot.hasChild("profileimage")) {
-                        String image = dataSnapshot.child("profileimage").getValue().toString();
+                if (dataSnapshot.child(currentUserID).exists()) {
+                    if (dataSnapshot.child(currentUserID).hasChild("profileimage")) {
+                        String image = dataSnapshot.child(currentUserID).child("profileimage").getValue().toString();
                         Picasso.get().load(image).placeholder(R.drawable.profile_pic).into(ProfileImage);
                     } else {
                         Toast.makeText(SetupActivity.this, "Please select profile image first.", Toast.LENGTH_SHORT).show();
@@ -119,9 +122,80 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
+            TechnicianRef.addValueEventListener(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child(currentUserID).exists()) {
+                        if (dataSnapshot.child(currentUserID).hasChild("profileimage")) {
+                            String image = dataSnapshot.child(currentUserID).child("profileimage").getValue().toString();
+                            Picasso.get().load(image).placeholder(R.drawable.profile_pic).into(ProfileImage);
+                        } else {
+                            Toast.makeText(SetupActivity.this, "Please select profile image first.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //CHECK IF USER OR TECHNICIAN
+//       User = getIntent().getExtras().get("Members").toString();
+
+
+        UsersRef.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+
+                if(dataSnapshot.child(currentUserID).child("profileimage").exists())
+                {
+
+                    Users  = "user";
+
+                }else
+                {
+
+                    TechnicianRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            if(dataSnapshot.child(currentUserID).child("profileimage").exists())
+                            {
+                                Users = "technician";
+
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
     // allow to save picked photo from the gallary
     @Override
@@ -158,15 +232,15 @@ public class SetupActivity extends AppCompatActivity {
                 resultUri = result.getUri();
 
                 //capture the date and  time of the post to have a unique name for each post
-                java.util.Calendar calFordDate = java.util.Calendar.getInstance();
-                SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
-                saveCurrentDate = currentDate.format(calFordDate.getTime());
+           //     java.util.Calendar calFordDate = java.util.Calendar.getInstance();
+//                SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
+     //           saveCurrentDate = currentDate.format(calFordDate.getTime());
 
                 java.util.Calendar calFordTime = Calendar.getInstance();
                 SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
                 saveCurrentTime = currentTime.format(calFordTime.getTime());
 
-                postRandomName= saveCurrentDate+saveCurrentTime;
+                postRandomName= saveCurrentDate;
 
                 //SAVE THE CROPED IMAGE IN THE FIREBASE STORAGE
                 final StorageReference filepath = userProfileImageRef.child(resultUri.getLastPathSegment() + postRandomName + ".jpg");
@@ -239,38 +313,81 @@ public class SetupActivity extends AppCompatActivity {
 
     private void addLinkToFirebaseDatabase()
     {
+        //CHECK IF USER OR TECHNICIAN
+        User = getIntent().getExtras().get("Members").toString();
 
-        UsersRef.child("profileimage").setValue(downloadImageUrl).addOnCompleteListener(new OnCompleteListener <Void>()
+
+        if(User.equals("user"))
         {
-            @Override
-            public void onComplete(@NonNull Task <Void> task)
+            UsersRef.child(currentUserID).child("profileimage").setValue(downloadImageUrl).addOnCompleteListener(new OnCompleteListener <Void>()
             {
-                if (task.isSuccessful())
+                @Override
+                public void onComplete(@NonNull Task <Void> task)
                 {
-                    Intent selfintent = new Intent(SetupActivity.this, SetupActivity.class);
-                    startActivity(selfintent);
-                    loadingBar.dismiss();
-                    Toast.makeText(SetupActivity.this, "profile image uploaded successfully uploaded....woooow...   ", Toast.LENGTH_SHORT).show();
-                } else {
-                    loadingBar.dismiss();
-                    String message = task.getException().getMessage();
-                    Toast.makeText(SetupActivity.this, "Error occured  " + message, Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful())
+                    {
+                        final String Users = "user";
+                        //User = getIntent().getExtras().get("Members").toString();
+                        Intent selfintent = new Intent(SetupActivity.this, SetupActivity.class);
+                      //  selfintent.putExtra("Member" , Users);
+                        startActivity(selfintent);
+                        loadingBar.dismiss();
+                        Toast.makeText(SetupActivity.this, "profile image uploaded successfully uploaded....woooow...   ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        loadingBar.dismiss();
+                        String message = task.getException().getMessage();
+                        Toast.makeText(SetupActivity.this, "Error occured  " + message, Toast.LENGTH_SHORT).show();
 
 
+                    }
                 }
-            }
 
 
-        });
+            });
+
+        }
+        else  if(User.equals("technician"))
+        {
+
+            TechnicianRef.child(currentUserID).child("profileimage").setValue(downloadImageUrl).addOnCompleteListener(new OnCompleteListener <Void>()
+            {
+                @Override
+                public void onComplete(@NonNull Task <Void> task)
+                {
+                    if (task.isSuccessful())
+                    {
+                        final String Users = "user";
+                      //  User = getIntent().getExtras().get("Members").toString();
+                        Intent selfintent = new Intent(SetupActivity.this, SetupActivity.class);
+                        //selfintent.putExtra("Member" , Users);
+                        startActivity(selfintent);
+                        loadingBar.dismiss();
+                        Toast.makeText(SetupActivity.this, "profile image uploaded successfully uploaded....woooow...   ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        loadingBar.dismiss();
+                        String message = task.getException().getMessage();
+                        Toast.makeText(SetupActivity.this, "Error occured  " + message, Toast.LENGTH_SHORT).show();
+
+
+                    }
+                }
+
+
+            });
+        }
 
 
     }
 
 
-    private void SaveaccountInfo ()
+    public void SaveaccountInfo ()
     {
-        {
-            String username = Username.getText().toString();
+        //CHECK IF USER OR TECHNICIAN
+//       Users = getIntent().getExtras().get("Members").toString();
+
+
+
+        String username = Username.getText().toString();
             String fullname = Fullname.getText().toString();
             String phonenumber = Phonenumber.getText().toString();
             String residence = Residence.getText().toString();
@@ -282,7 +399,7 @@ public class SetupActivity extends AppCompatActivity {
 
             if (TextUtils.isEmpty(fullname))
             {
-                Fullname.setError("Fullname required!");
+                Fullname.setError("fullname required!");
             }
 
             if (TextUtils.isEmpty(phonenumber))
@@ -293,44 +410,88 @@ public class SetupActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(residence))
             {
                 Residence.setError("Residentce cannot be empty!");
-            } else {
+            } else
+            {
                 HashMap userMap = new HashMap();
-                userMap.put("Username", username);
-                userMap.put("Fullname", fullname);
+                userMap.put("username", username);
+                userMap.put("fullname", fullname);
                 userMap.put("Id Number", "Null");
-                userMap.put("Phone Number", phonenumber);
-                userMap.put("Residence", residence);
-                userMap.put("Status", "Hey there I am using this app developed by Moses Kipyegon in 2007");
+                userMap.put("phone Number", phonenumber);
+                userMap.put("residence", residence);
+                userMap.put("Member", Users);
+                userMap.put("status", "Hey there I am using this app developed by Nyambega");
 
                 loadingBar.setTitle("Saving Information");
                 loadingBar.setMessage("Please wait while we are creating new account...");
                 loadingBar.show();
                 loadingBar.setCanceledOnTouchOutside(true);
 
-                UsersRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            sendToDashboard();
-                            Toast.makeText(SetupActivity.this, "Your account is created successfully..", Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
-                        } else {
-                            String messages = task.getException().getMessage();
-                            Toast.makeText(SetupActivity.this, "Error occured :  " + messages, Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
-                        }
 
-                    }
-                });
+
+                if(Users.equals("user"))
+                {
+
+                    UsersRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                sendToHomeActivity();
+                                Toast.makeText(SetupActivity.this, "Your account is created successfully..", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+                            } else {
+                                String messages = task.getException().getMessage();
+                                Toast.makeText(SetupActivity.this, "Error occured :  " + messages, Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+                            }
+
+                        }
+                    });
+
+                }else if(Users.equals("technician"))
+                {
+                    TechnicianRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                sendToHomeActivity2();
+                                Toast.makeText(SetupActivity.this, "Your account is created successfully..", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+                            } else {
+                                String messages = task.getException().getMessage();
+                                Toast.makeText(SetupActivity.this, "Error occured :  " + messages, Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+                            }
+
+                        }
+                    });
+
+                }else
+                {
+                    Toast.makeText(SetupActivity.this, "User not recognised", Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
 
             }
 
-        }
+
     }
 
-    private void sendToDashboard () {
-        startActivity(new Intent(this, dashboard.class));
-
+    private void sendToHomeActivity () {
+        final String User = "user";
+        Intent gotomainIntenet = new Intent(this, MainActivity.class);
+        gotomainIntenet.putExtra("Members", User);
+        startActivity(gotomainIntenet);
+    }
+    private void sendToHomeActivity2 () {
+        final String User = "technician";
+        Intent gotomainIntenet = new Intent(this, MainActivity.class);
+        gotomainIntenet.putExtra("Members", User);
+        startActivity(gotomainIntenet);
     }
 }
 

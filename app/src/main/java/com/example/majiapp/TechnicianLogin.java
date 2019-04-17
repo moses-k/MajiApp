@@ -6,14 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,56 +27,50 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
-import java.util.Timer;
-
-public class Login extends AppCompatActivity implements View.OnClickListener {
-
+public class TechnicianLogin extends AppCompatActivity implements View.OnClickListener
+{
     EditText email, editTextPassword;
-    TextView Forget_password;
+    TextView Forget_password, Technician_Link;
     ProgressBar mprogressBar;
     ProgressDialog loadingBar;
     Handler handler;
     Runnable runnable;
     private ImageView facebookLoginButton, twitterLogonButton,googleLoginButton;
-    Timer timer;
-    Button btlog;
-    Button btreg;
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference UserRef;
 
-//    implementation 'de.hdoenhof:circleimageview:2.2.0'
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_technician_login);
 
-       FirebaseApp.initializeApp(this);
+        FirebaseApp.initializeApp(this);
 
         mAuth =  FirebaseAuth.getInstance();
-        email = (EditText) findViewById(R.id.etEmail);
-        editTextPassword = (EditText) findViewById(R.id.etPassword);
-        Forget_password = (TextView) findViewById(R.id.forget_password);
+        email = (EditText) findViewById(R.id.tech_Email);
+        editTextPassword = (EditText) findViewById(R.id.tech_Password);
+        Forget_password = (TextView) findViewById(R.id.tech_forget_password);
         loadingBar = new ProgressDialog(this);
-
-        facebookLoginButton = (ImageView) findViewById(R.id.facebook_signin_button);
-        googleLoginButton = (ImageView) findViewById(R.id.google_signin_button);
-        twitterLogonButton = (ImageView) findViewById(R.id.twitter_signin_button);
-
+        facebookLoginButton = (ImageView) findViewById(R.id.tech_facebook_signin_button);
+        googleLoginButton = (ImageView) findViewById(R.id.tech_google_signin_button);
+        twitterLogonButton = (ImageView) findViewById(R.id.tech_twitter_signin_button);
 
 
-        findViewById(R.id.btnLogin).setOnClickListener(this);
-        findViewById(R.id.btnSignup).setOnClickListener(this);
-        findViewById(R.id.forget_password).setOnClickListener(this);
 
+        findViewById(R.id.tech_login_button).setOnClickListener(this);
+        findViewById(R.id.tech_Signup_link).setOnClickListener(this);
+        findViewById(R.id.tech_forget_password).setOnClickListener(this);
 
     }
 
-
     //check user if already loged in
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -88,31 +81,29 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private void sendUserToMainActivity()
     {
-        startActivity(new Intent(this,MainActivity.class));
+        final String User = "technician";
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        mainIntent.putExtra("Members", User);
+        startActivity(mainIntent);
 
     }
-
-    private void sendUserToSetupActivity() {
-        startActivity(new Intent(this, SetupActivity.class));
-    }
-
-
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
 
         switch (view.getId()) {
-            case R.id.btnLogin:
+            case R.id.tech_login_button:
                 //  Toast.makeText(getApplicationContext(),"User registered",Toast.LENGTH_SHORT).show();
 
                 Login(view);
                 break;
 
-            case R.id.btnSignup:
+            case R.id.tech_Signup_link:
                 startActivity(new Intent(this, Sign_up.class));
 
                 break;
-            case R.id.forget_password:
+            case R.id.tech_forget_password:
                 startActivity(new Intent(this, Reset_passwordActivity.class));
                 break;
 
@@ -123,23 +114,24 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
 
 
-
-
-
-
-    public void Login(View view) {
-        if (!isConnected(Login.this)) buildDialog(Login.this).show();
+    //perform login
+    public void Login(View view)
+    {
+        if (!isConnected(TechnicianLogin.this)) buildDialog(TechnicianLogin.this).show();
         else {
-            // Toast.makeText( Login.this, "Welcome user", Toast.LENGTH_SHORT ).show();
+
+            //CHECK IF USER OR TECHNICIAN
+            //final String User = getIntent().getExtras().get("Members").toString();
+            // Toast.makeText( User_Login.this, "Welcome user", Toast.LENGTH_SHORT ).show();
             // setContentView( R.layout.activity_main )
 
 
             String username = email.getText().toString();
             String password = editTextPassword.getText().toString();
             String result = "";
-          // String type = "login";
-           // BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-           // backgroundWorker.execute(type, username, password);
+            // String type = "login";
+            // BackgroundWorker backgroundWorker = new BackgroundWorker(this);
+            // backgroundWorker.execute(type, username, password);
 
             //check if  is empty
             if (username.isEmpty()) {
@@ -167,7 +159,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 return;
             }
 
-            loadingBar.setTitle("Login");
+            loadingBar.setTitle("User_Login");
             loadingBar.setMessage("Please wait while loging in");
             loadingBar.show();
             loadingBar.setCanceledOnTouchOutside(true);
@@ -179,34 +171,30 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task)
                         {
-                           if (task.isSuccessful())
-                          {
-                            SendUserMainActivity();
-                            Toast.makeText(getApplicationContext(),"User Login successfull",Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
+                            if (task.isSuccessful())
+                            {
+                                sendUserToMainActivity();
+                                Toast.makeText(getApplicationContext(),"User User_Login successfull",Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
 
-                           }else
+                            }else
 
-                          {
-                            String message = task.getException().getMessage();
-                            Toast.makeText(getApplicationContext(),"Error occured: "+message,Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
-                          }
-                         }
+                            {
+                                String message = task.getException().getMessage();
+                                Toast.makeText(getApplicationContext(),"Error occured: "+message,Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+                            }
+                        }
 
                     });
 
         }
     }
 
-    private void SendUserMainActivity() {
-
-        startActivity(new Intent(this,MainActivity.class));
-    }
-
 
     //check internet connection
-    public boolean isConnected(Context context) {
+    public boolean isConnected(Context context)
+    {
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = cm.getActiveNetworkInfo();
@@ -225,7 +213,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     //dialogbox
 
 
-    public AlertDialog.Builder buildDialog(Context c) {
+    public AlertDialog.Builder buildDialog(Context c)
+    {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder.setTitle("No Internet Connection");
@@ -247,6 +236,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
 
+
+
+
 }
-
-

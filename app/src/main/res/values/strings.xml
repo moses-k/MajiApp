@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Report App</string>
+    <string name="app_name">Maji</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="title_activity_login">Sign in</string>

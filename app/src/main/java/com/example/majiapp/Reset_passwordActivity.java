@@ -60,7 +60,7 @@ public class Reset_passwordActivity extends AppCompatActivity {
                         {
                             if(task.isSuccessful())
                             {
-                                Toast.makeText(Reset_passwordActivity.this,"Please check your Email Account if you want to reset your password",Toast.LENGTH_SHORT).show();startActivity(new Intent(Reset_passwordActivity.this,Login.class));
+                                Toast.makeText(Reset_passwordActivity.this,"Please check your Email Account if you want to reset your password",Toast.LENGTH_SHORT).show();startActivity(new Intent(Reset_passwordActivity.this, User_Login.class));
 
                             }else
                             {

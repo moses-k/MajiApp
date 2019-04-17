@@ -42,12 +42,13 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText userName, fullName, phoneNumber, Residence, userStatus;
     private Button UpdateAccountSettingsButon;
     private CircleImageView UserProfImage;
-    private DatabaseReference SettingsuserRef;
+    private DatabaseReference SettingsuserRef,SettingtechnicianRef;
     private FirebaseAuth mAth;
     final static int Gallery_pick = 1;
     ProgressDialog loadingBar;
     private StorageReference userProfileImageRef;
     private Uri resultUri;
+    private String User;
 
 
 
@@ -64,17 +65,15 @@ public class SettingsActivity extends AppCompatActivity {
         mAth = FirebaseAuth.getInstance();
 
         currentuserId = mAth.getUid();
-        SettingsuserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentuserId);
+        SettingsuserRef = FirebaseDatabase.getInstance().getReference().child("users");
+        SettingtechnicianRef = FirebaseDatabase.getInstance().getReference().child("technicians");
+
         userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
-
-
-
         mtoolbar = (Toolbar) findViewById(R.id.settings_toolbar);
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setTitle("Account Settings");
         //display the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         userName = (EditText) findViewById(R.id.settings_username);
         fullName = (EditText) findViewById(R.id.settings_fullname);
@@ -84,46 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
         UpdateAccountSettingsButon = (Button) findViewById(R.id.update_account_settings_button);
         UserProfImage = (CircleImageView) findViewById(R.id.settings_profile_image);
         loadingBar = new ProgressDialog(this);
-
-
-
-        //retrieve data
-        SettingsuserRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())
-                {
-                    //get data from the firebase and store into the strings
-                    String mystatus  = dataSnapshot.child("Status").getValue().toString();
-                    String myProfileImage  = dataSnapshot.child("profileimage").getValue().toString();
-                    String myusername = dataSnapshot.child("Username").getValue().toString();
-                    String myfullname = dataSnapshot.child("Fullname").getValue().toString();
-                    String myPhonenumber = dataSnapshot.child("Phone Number").getValue().toString();
-                    String myResidence= dataSnapshot.child("Residence").getValue().toString();
-
-                    //load image stored in the string to the profile image and set data to the one i the database
-                    Picasso.get().load(myProfileImage).placeholder(R.drawable.profile_pic).into(UserProfImage);
-
-                    //display data
-                    userStatus.setText(mystatus);
-                    userName.setText(myusername);
-                    fullName.setText(myfullname);
-                    phoneNumber.setText(myPhonenumber);
-                    Residence.setText(myResidence);
-
-
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-
-            }
-        });
 
 
         UpdateAccountSettingsButon.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +130,145 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        SettingsuserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.child(currentuserId).exists())
+                {
+                    User = "user";
+                    retrieveuserdata();
+
+                }
+                else {
+                    SettingtechnicianRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            if(dataSnapshot.child(currentuserId).exists())
+                            {
+                                User = "technician";
+                               retrievetechniciandata();
+
+                            }else
+                            {
+                                Toast.makeText(SettingsActivity.this,"Unrecognised user",Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void retrievetechniciandata()
+    {
+
+        //retrieve data
+        SettingtechnicianRef.child(currentuserId).addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    //get data from the firebase and store into the strings
+                    String mystatus  = dataSnapshot.child("status").getValue().toString();
+                    String myProfileImage  = dataSnapshot.child("profileimage").getValue().toString();
+                    String myusername = dataSnapshot.child("Username").getValue().toString();
+                    String myfullname = dataSnapshot.child("fullname").getValue().toString();
+                    String myPhonenumber = dataSnapshot.child("phone Number").getValue().toString();
+                    String myResidence= dataSnapshot.child("residence").getValue().toString();
+
+                    //load image stored in the string to the profile image and set data to the one i the database
+                    Picasso.get().load(myProfileImage).placeholder(R.drawable.profile_pic).into(UserProfImage);
+
+                    //display data
+                    userStatus.setText(mystatus);
+                    userName.setText(myusername);
+                    fullName.setText(myfullname);
+                    phoneNumber.setText(myPhonenumber);
+                    Residence.setText(myResidence);
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+
+
+    }
+
+    private void retrieveuserdata()
+    {
+        //retrieve data
+        SettingsuserRef.child(currentuserId).addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    //get data from the firebase and store into the strings
+                    String mystatus  = dataSnapshot.child("status").getValue().toString();
+                    String myProfileImage  = dataSnapshot.child("profileimage").getValue().toString();
+                    String myusername = dataSnapshot.child("username").getValue().toString();
+                    String myfullname = dataSnapshot.child("fullname").getValue().toString();
+                    String myPhonenumber = dataSnapshot.child("phone Number").getValue().toString();
+                    String myResidence= dataSnapshot.child("residence").getValue().toString();
+
+                    //load image stored in the string to the profile image and set data to the one i the database
+                    Picasso.get().load(myProfileImage).placeholder(R.drawable.profile_pic).into(UserProfImage);
+
+                    //display data
+                    userStatus.setText(mystatus);
+                    userName.setText(myusername);
+                    fullName.setText(myfullname);
+                    phoneNumber.setText(myPhonenumber);
+                    Residence.setText(myResidence);
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+
+
+
+    }
+
     private void ValidateAccountInfo() {
         String status = userStatus.getText().toString();
         String username = userName.getText().toString();
@@ -188,7 +286,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         else if (TextUtils.isEmpty(fullname))
         {
-            Toast.makeText(this,"Please write your Fullname... ",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Please write your fullname... ",Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(phonenumber))
         {
@@ -210,30 +308,59 @@ public class SettingsActivity extends AppCompatActivity {
     private void UpdateAccountInfo(String status, String username, String fullname, String phonenumber, String residence)
     {
         HashMap userMap = new HashMap();
-        userMap.put("Status", status);
-        userMap.put("Username",username);
-        userMap.put("Fullname",fullname);
-        userMap.put("Phone Number",phonenumber);
-        userMap.put("Residence",residence);
+        userMap.put("status", status);
+        userMap.put("username",username);
+        userMap.put("fullname",fullname);
+        userMap.put("phone Number",phonenumber);
+        userMap.put("residence",residence);
 
-        SettingsuserRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(SettingsActivity.this,"Account settings updated successfully..",Toast.LENGTH_SHORT).show();;
-                    loadingBar.dismiss();
-                    sendUserToDashbordActivity();
-                }
-                else
-                {
-                    String message = task.getException().getMessage();
-                    Toast.makeText(SettingsActivity.this, "Error occured  " + message, Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
-                }
+        if(User.equals("user"))
+        {
+            SettingsuserRef.child(currentuserId).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener()
+            {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if(task.isSuccessful())
+                    {
+                        Toast.makeText(SettingsActivity.this,"Account settings updated successfully..",Toast.LENGTH_SHORT).show();;
+                        loadingBar.dismiss();
+                        sendUserToDashbordActivity();
+                    }
+                    else
+                    {
+                        String message = task.getException().getMessage();
+                        Toast.makeText(SettingsActivity.this, "Error occured  " + message, Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
+                    }
 
-            }
-        });
+                }
+            });
+
+        }
+        else if(User.equals("technician"))
+        {
+            SettingtechnicianRef.child(currentuserId).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener()
+            {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if(task.isSuccessful())
+                    {
+                        Toast.makeText(SettingsActivity.this,"Account settings updated successfully..",Toast.LENGTH_SHORT).show();;
+                        loadingBar.dismiss();
+                        sendUserToDashbordActivity();
+                    }
+                    else
+                    {
+                        String message = task.getException().getMessage();
+                        Toast.makeText(SettingsActivity.this, "Error occured  " + message, Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
+                    }
+
+                }
+            });
+
+        }
+
     }
 
     private void sendUserToDashbordActivity() {

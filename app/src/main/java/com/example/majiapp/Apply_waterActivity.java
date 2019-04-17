@@ -42,7 +42,7 @@ public class Apply_waterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_apply_water);
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
-        applyuserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+        applyuserRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId);
         applywaterRef = FirebaseDatabase.getInstance().getReference().child("Water Application");
 
         mToolbar = (Toolbar) findViewById(R.id.apply_water_toolbar);
@@ -82,7 +82,7 @@ public class Apply_waterActivity extends AppCompatActivity {
             {
                 if(dataSnapshot.exists())
                 {
-                    String userfullname  = dataSnapshot.child("Fullname").getValue().toString();
+                    String userfullname  = dataSnapshot.child("fullname").getValue().toString();
                     String fullname = fullName.getText().toString();
                     String idnumber = idNumber.getText().toString();
                     String phonenumber = phoneNumber.getText().toString();
@@ -92,7 +92,7 @@ public class Apply_waterActivity extends AppCompatActivity {
 
                     if (TextUtils.isEmpty(fullname))
                     {
-                        fullName.setError("Fullname required!");
+                        fullName.setError("fullname required!");
                     }
                     else if (TextUtils.isEmpty(idnumber))
                     {
@@ -117,7 +117,7 @@ public class Apply_waterActivity extends AppCompatActivity {
                     else
                     {
                         HashMap userMap = new HashMap();
-                        userMap.put("Fullname", fullname);
+                        userMap.put("fullname", fullname);
                         userMap.put("ID Number", idnumber);
                         userMap.put("Phone Number", phonenumber);
                         userMap.put("Email", email);
@@ -139,6 +139,7 @@ public class Apply_waterActivity extends AppCompatActivity {
                                 {
                                     sendUserToMainActivity();
                                     loadingBar.dismiss();
+                                    Toast.makeText(Apply_waterActivity.this, "Your request have been received sucessfully.... we shall contact you soon",Toast.LENGTH_LONG).show();
 
 
                                 }else {

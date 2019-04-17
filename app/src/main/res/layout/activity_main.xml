@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/main_activity"
-    android:background="@drawable/water"
-
+    android:background="@color/colorPrimary"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -31,20 +30,21 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="300dp"
+                android:background="@color/darkblue"
                 android:layout_marginTop="0dp"
-                android:src="@drawable/water2" />
+                />
 
 
             <Button
                 android:id="@+id/repport_water"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/inputs"
                 android:text="Report water Breakage"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="17sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <Button
@@ -56,8 +56,21 @@
 
                 android:text="Apply for water"
                 android:textStyle="bold"
-                android:textSize="17sp"
+                android:textSize="14sp"
                 android:background="@drawable/inputs"/>
+            <Button
+                android:id="@+id/see_reports"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20sp"
+                android:layout_height="60dp"
+                android:textColor="@color/colorPrimaryDark"
+
+                android:text="View Reports"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:background="@drawable/inputs"/>
+
+
 
 
 

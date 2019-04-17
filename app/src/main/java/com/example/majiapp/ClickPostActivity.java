@@ -28,9 +28,9 @@ public class ClickPostActivity extends AppCompatActivity {
     private TextView PostDescription;
     private Button EditTextButton, DeleteTextButton;
     private FirebaseAuth mAuth;
-    private DatabaseReference clickPostRef;
+    private DatabaseReference clickPostRef, UserRef, TechnicianRef;
 
-    private  String Postkey, currentUserId, databaseUserId, description,image;
+    private  String User, Postkey, currentUserId, databaseUserId, description,image;
 
 
     @Override
@@ -41,20 +41,24 @@ public class ClickPostActivity extends AppCompatActivity {
         //id for the user who is online
         currentUserId = mAuth.getCurrentUser().getUid();
 
+        UserRef  = FirebaseDatabase.getInstance().getReference().child("users");
+        TechnicianRef  = FirebaseDatabase.getInstance().getReference().child("technicians");
+
         PostImage = (ImageView) findViewById(R.id.click_post_image);
         PostDescription = (TextView) findViewById(R.id.click_post_description);
         EditTextButton = (Button) findViewById(R.id.edit_post_buton);
         DeleteTextButton = (Button) findViewById(R.id.delete_post_button);
 
         Postkey = getIntent().getExtras().get("Postkey").toString();
-        clickPostRef = FirebaseDatabase.getInstance().getReference().child("Posts").child(Postkey);
+        clickPostRef = FirebaseDatabase.getInstance().getReference().child("Reports").child(Postkey);
 
         EditTextButton.setVisibility(View.INVISIBLE);
         DeleteTextButton.setVisibility(View.INVISIBLE);
 
 
         //retrieve the image and description in the clickActivity
-        clickPostRef.addValueEventListener(new ValueEventListener() {
+        clickPostRef.addValueEventListener(new ValueEventListener()
+        {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -102,6 +106,62 @@ public class ClickPostActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        //check who the current user is either USER OR TECHNICIAN
+
+        UserRef.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.child(currentUserId).child("Member").exists())
+                {
+                    User = dataSnapshot.child(currentUserId).child("Member").getValue().toString();
+
+
+                }else {
+
+
+                    TechnicianRef.addValueEventListener(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            if(dataSnapshot.child(currentUserId).child("Member").exists())
+                            {
+                                User = dataSnapshot.child(currentUserId).child("Member").getValue().toString();
+
+                               DeleteTextButton.setVisibility(View.VISIBLE);
+                               DeleteTextButton.setText("Remove this Report");
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
     }
 
     private void EdiCurrentPost(final String description) {

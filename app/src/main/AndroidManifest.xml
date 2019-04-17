@@ -23,8 +23,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Reset_passwordActivity"
-            android:parentActivityName=".Login" ></activity>
+        <activity android:name=".TechnicianLogin"></activity>
+        <activity android:name=".TechniciansActivity"></activity>
+
+        <activity android:name=".UserRegister" />
+        <activity android:name=".TechnicianRegister" />
+       >
+        <activity
+            android:name=".Reset_passwordActivity"
+            android:parentActivityName=".User_Login" />
+        <activity
+            android:name=".CommentsActivity"
+            android:parentActivityName=".dashboard" />
         <activity
             android:name=".Apply_waterActivity"
             android:parentActivityName=".MainActivity" />
@@ -37,7 +47,7 @@
         <activity
             android:name=".Post"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".Chats" />
+        <activity android:name=".ChatActivity" />
         <activity android:name=".SetupActivity" />
         <activity
             android:name=".dashboard"
@@ -46,7 +56,7 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Login">
+        <activity android:name=".User_Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

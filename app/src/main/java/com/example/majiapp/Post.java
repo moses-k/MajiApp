@@ -50,6 +50,8 @@ public class Post extends AppCompatActivity {
     private String downloadUrl;
     private DatabaseReference userRef,PostsRef;
     private FirebaseAuth mAuth;
+    String userProfileImage;
+
 
 
 
@@ -68,8 +70,8 @@ public class Post extends AppCompatActivity {
         getSupportActionBar().setTitle("Update Post");
 
         PostImagesReference = FirebaseStorage.getInstance().getReference();
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        PostsRef = FirebaseDatabase.getInstance().getReference().child("Reports");
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getCurrentUser().getUid();
 
@@ -127,7 +129,7 @@ public class Post extends AppCompatActivity {
     {
      //capture the date and time of the post to have a unique name for each post
         Calendar calFordDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
         saveCurrentDate = currentDate.format(calFordDate.getTime());
 
         Calendar calFordTime = Calendar.getInstance();
@@ -193,9 +195,12 @@ public class Post extends AppCompatActivity {
             {
                 if(dataSnapshot.exists())
                 {
+
                     //get current username and profile for the current user loged in
-                    String userfullname  = dataSnapshot.child("Fullname").getValue().toString();
-                    String userProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+                    String userfullname  = dataSnapshot.child("fullname").getValue().toString();
+                    if(dataSnapshot.child("profileimage").exists()) {
+                          userProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+                    }
                     String Description = PostDescription.getText().toString();
 
                     //String postDescription = Description;

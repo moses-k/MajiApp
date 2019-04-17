@@ -2,7 +2,6 @@ package com.example.majiapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -38,12 +36,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private View navView;
     private FirebaseAuth mAuth;
-    private DatabaseReference UserRef, postsRef;
+    private DatabaseReference UserRef, TechnicianRef, postsRef;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    String current_user_ID;
+    String current_user_ID,User;
     private CircleImageView NavProfileImage;
     private TextView navusername;
-    private Button Report_button, Apply_water_button;
+    private Button Report_button, Apply_water_button,View_Reports;
 
 
     @Override
@@ -53,8 +51,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView( R.layout.activity_main );
 
         mAuth = FirebaseAuth.getInstance();
-        UserRef  = FirebaseDatabase.getInstance().getReference().child("Users");
-        postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        UserRef  = FirebaseDatabase.getInstance().getReference().child("users");
+        TechnicianRef  = FirebaseDatabase.getInstance().getReference().child("technicians");
+
+
+        postsRef = FirebaseDatabase.getInstance().getReference().child("Reports");
         current_user_ID = mAuth.getCurrentUser().getUid();
 
         mToolbar = (Toolbar) findViewById(R.id.mainActivity_toolbar);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Report_button =(Button) findViewById(R.id.repport_water);
         Apply_water_button = (Button) findViewById(R.id.apply_water);
+        View_Reports = (Button) findViewById(R.id.see_reports);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -94,20 +96,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 takeUserToApplywaterActivity();
             }
         });
+        View_Reports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeUserToReports();
+            }
+        });
 
 
+        Report_button.setVisibility(View.INVISIBLE);
+        Apply_water_button.setVisibility(View.INVISIBLE);
+        View_Reports.setVisibility(View.INVISIBLE);
 
         //add profile image and username to the nav drawer
-        UserRef.child(current_user_ID).addValueEventListener(new ValueEventListener()
+        UserRef.addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                if(dataSnapshot.exists())
+                if(dataSnapshot.child(current_user_ID).exists())
                 {
-                    if(dataSnapshot.hasChild("Fullname"))
+                    if(dataSnapshot.child(current_user_ID).hasChild("fullname"))
                     {
-                        String fullname = dataSnapshot.child("Fullname").getValue().toString();
+                        String fullname = dataSnapshot.child(current_user_ID).child("fullname").getValue().toString();
                         navusername.setText(fullname);
 
                     }else
@@ -115,9 +126,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(MainActivity.this, "User has no username in the database",Toast.LENGTH_SHORT).show();
                     }
 
-                    if(dataSnapshot.hasChild("profileimage"))
+                    if(dataSnapshot.child(current_user_ID).hasChild("profileimage"))
                     {
-                        String image =    dataSnapshot.child("profileimage").getValue().toString();
+                        String image =    dataSnapshot.child(current_user_ID).child("profileimage").getValue().toString();
                         Picasso.get().load(image).placeholder(R.drawable.profile_pic).into(NavProfileImage);
                     }
                     else
@@ -134,7 +145,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
+        //add profile image and username to the nav drawer
+        TechnicianRef.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.child(current_user_ID).exists())
+                {
+                    if(dataSnapshot.child(current_user_ID).hasChild("fullname"))
+                    {
+                        String fullname = dataSnapshot.child(current_user_ID).child("fullname").getValue().toString();
+                        navusername.setText(fullname);
+
+                    }else
+                    {
+                        Toast.makeText(MainActivity.this, "User has no username in the database",Toast.LENGTH_SHORT).show();
+                    }
+
+                    if(dataSnapshot.child(current_user_ID).hasChild("profileimage"))
+                    {
+                        String image =    dataSnapshot.child(current_user_ID).child("profileimage").getValue().toString();
+                        Picasso.get().load(image).placeholder(R.drawable.profile_pic).into(NavProfileImage);
+                    }
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, "Profile name do not exist",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            //
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+                Toast.makeText(MainActivity.this, "Erooorrrrrrrrr",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+       // Displaybuttons();
+
     }
+
+    private void takeUserToReports()
+    {
+        final String User = "technician";
+        Intent gotosetupIntenet = new Intent(this, dashboard.class);
+        gotosetupIntenet.putExtra("Members", User);
+        startActivity(gotosetupIntenet);
+
+    }
+
+
+
 
     private void takeUserToApplywaterActivity() {
         startActivity(new Intent(this,Apply_waterActivity.class));
@@ -146,51 +211,140 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     //check user existence in the database
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
 
-      /*  mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
-            {
-                if (firebaseAuth.getCurrentUser() == null)
-                {
-                    sendUserToLoginActivity();
 
-                }else {
-                    checkUserExistence();
-
-                }
-            }
-        };*/
       FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser == null)
         {
             sendUserToLoginActivity();
 
-        } else {
+        } else
+        {
+            //check who the current user is either USER OR TECHNICIAN
+            UserRef.addValueEventListener(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
+                    if(dataSnapshot.child(current_user_ID).exists())
+                    {
+                         String User = "user";
 
-            checkUserExistence();
+                           Report_button.setVisibility(View.VISIBLE);
+                            Apply_water_button.setVisibility(View.VISIBLE);
+                            View_Reports.setVisibility(View.INVISIBLE);
+                            CheckuserExistence();
+
+
+
+                        }else {
+
+
+                        TechnicianRef.addValueEventListener(new ValueEventListener()
+                        {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                            {
+                                if(dataSnapshot.child(current_user_ID).exists())
+                                {
+                                        String User = "technician";
+
+                                        Report_button.setVisibility(View.INVISIBLE);
+                                        Apply_water_button.setVisibility(View.INVISIBLE);
+                                        View_Reports.setVisibility(View.VISIBLE);
+
+                                        CheckTechnicianExixtence();
+
+
+                                }else {
+
+                                    CheckTechnicianExixtence();
+                                    CheckuserExistence();
+
+
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError)
+                {
+
+                }
+            });
+
+
+        }
+    }// end of onstart
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null)
+        {
+            sendUserToLoginActivity();
+
         }
     }
 
+    //check if user exist in the database
+    private void CheckTechnicianExixtence()
+    {
+        TechnicianRef.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange( DataSnapshot dataSnapshot)
+            {
+                if(!dataSnapshot.hasChild(current_user_ID))
+                {
+                    final String User = "technician";
+                    Intent gotosetupIntenet = new Intent(MainActivity.this, SetupActivity.class);
+                    gotosetupIntenet.putExtra("Members", User);
+                    startActivity(gotosetupIntenet);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                Toast.makeText(getApplicationContext(),"Database Error ocured",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     //check if user exist in the database
-    private void checkUserExistence()
+    private void CheckuserExistence()
     {
-        final  String current_user_id = mAuth.getCurrentUser().getUid();
-
         UserRef.addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot)
             {
-                if(!dataSnapshot.hasChild(current_user_id))
+                if(!dataSnapshot.hasChild(current_user_ID))
                 {
-                    sendUserToSetupActivity();
+
+                    Toast.makeText(MainActivity.this, "seeeeeeeeeeeeeeeeen", Toast.LENGTH_SHORT).show();
+
+                    final String User = "user";
+                    Intent gotosetupIntenet = new Intent(MainActivity.this, SetupActivity.class);
+                    gotosetupIntenet.putExtra("Members", User);
+                    startActivity(gotosetupIntenet);
                 }
             }
 
@@ -203,14 +357,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void sendUserToSetupActivity()
-    {
-        startActivity(new Intent(this,SetupActivity.class));
-    }
+
+
 
     private void sendUserToLoginActivity()
     {
-        startActivity(new Intent(this,Login.class));
+        startActivity(new Intent(this, User_Login.class));
     }
 
     //anable onclick to the mtoogle
@@ -235,14 +387,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this,Post.class));
                 break;
             case R.id.nav_view_reports:
-                Intent dashIntent = new Intent(MainActivity.this,dashboard.class);
-                startActivity(dashIntent);                break;
+                final String User = "user";
+                Intent viewreportsIntenet = new Intent(this, dashboard.class);
+                viewreportsIntenet.putExtra("Members", User);
+                startActivity(viewreportsIntenet);
+                break;
             case R.id.nav_profile:
                 startActivity(new Intent(this,ProfileActivity.class));
                 break;
-            case R.id.nav_notifications:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                        new NotificationFragment()).commit();
+            case R.id.nav_chats:
+                startActivity(new Intent(this,TechniciansActivity.class));
+
                 break;
             case R.id.nav_settings:
                 Intent settingIntent = new Intent(MainActivity.this,SettingsActivity.class);
@@ -283,37 +438,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.send:
                 Toast.makeText(this, "Send successful", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.menu_logout2:
-                ab = new AlertDialog.Builder(MainActivity.this);
 
-                ab.setTitle("confirm");
-                ab.setIcon(R.drawable.ic_launch_black_24dp);
-                ab.setMessage("Are you sure you want to logout?");
-
-                ab.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        Toast.makeText(MainActivity.this, "ok", Toast.LENGTH_SHORT).show();
-                        Login();
-                    }
-                });
-
-                ab.setNegativeButton("cancle", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        Toast.makeText(MainActivity.this, "cancle", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                ab.show();
-                break;
-            case R.id.menu_about2:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                        new AboutFragment()).commit();
-                break;
-            case R.id.menu_settings2:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                        new SettingsFragment()).commit();
-                break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_activity);
         drawer.closeDrawer(GravityCompat.START);
@@ -322,6 +447,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Login () {
-        startActivity(new Intent(this, Login.class));
+        startActivity(new Intent(this, User_Login.class));
     }
 }

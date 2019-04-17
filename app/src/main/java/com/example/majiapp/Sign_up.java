@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,179 +28,41 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Timer;
 
-public class Sign_up extends AppCompatActivity implements View.OnClickListener {
-    EditText name, username, Email, phonenumber, residence, Password, confirmpassword;
-    ProgressBar mprogressBar;
-    RelativeLayout RegLayout;
+public class Sign_up extends AppCompatActivity  {
 
-    Handler handler;
-    Runnable runnable;
-    Timer timer;
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase firebaseDatabase;
-    private ProgressDialog loadingBar;
+    private Button userbutton, technicianbutton;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        mAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        Email = (EditText) findViewById(R.id.etEmail);
-        Password = (EditText) findViewById(R.id.etPassword);
-        confirmpassword = (EditText) findViewById(R.id.etconfirmPassword);
-        mprogressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mprogressBar.setVisibility(View.GONE);
-        loadingBar = new ProgressDialog(this);
-        RegLayout = (RelativeLayout) findViewById(R.id.reglayout);
+        userbutton = (Button) findViewById(R.id.userreg_nav);
+        technicianbutton = (Button) findViewById(R.id.technicianreg_nav);
 
-        RegLayout.setVisibility(View.INVISIBLE);
+        userbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent  userRegisterIntent = new Intent(Sign_up.this, UserRegister.class);
+                startActivity(userRegisterIntent);
+            }
+        });
 
-        findViewById(R.id.btreg).setOnClickListener(this);
-        findViewById(R.id.btLogin).setOnClickListener(this);
+        technicianbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent  userRegisterIntent = new Intent(Sign_up.this, TechnicianRegister.class);
+                startActivity(userRegisterIntent);
+            }
+        });
+
+
+
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser != null) {
-            sendUserTodashboard();
-        }
-    }
-
-    private void sendUserTodashboard() {
-
-        startActivity(new Intent(this,dashboard.class));
-    }
-
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btreg:
-                Register(view);
-                break;
-
-            case  R.id.btLogin:
-                startActivity(new Intent(this, Login.class));
-
-        }
-    }
-
-        public void Register (View view){
-
-            if (!isConnected(Sign_up.this)) buildDialog(Sign_up.this).show();
-            else {
-
-                String username = Email.getText().toString();
-                String password = Password.getText().toString();
-                String str_confirmpassword = confirmpassword.getText().toString();
-
-                //check if username is empty
-                if (username.isEmpty()) {
-                    Email.setError("username is required");
-
-
-                    return;
-                }
-                //validate username
-                if (!Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
-                    Email.setError("Please enter a valid username");
-                    Email.requestFocus();
-                    return;
-                }
-                //check if password is empty
-                if (password.isEmpty()) {
-                    Password.setError("Password is required");
-                    Password.requestFocus();
-                    return;
-                }
-
-                //validate  password if the match
-                if (!str_confirmpassword.matches(password)) {
-                    confirmpassword.setError("Password does not match");
-                    confirmpassword.requestFocus();
-                    return;
-                }
-
-                if (password.length() < 6) {
-                    Password.setError("Minimun length of password should be 6");
-                    Password.requestFocus();
-                    return;
-
-                }
-
-               loadingBar.setTitle("Creating New Account");
-                loadingBar.setMessage("Please wait while we register you");
-                loadingBar.show();
-                loadingBar.setCanceledOnTouchOutside(true);
-
-                mAuth.createUserWithEmailAndPassword(username, password)
-                        .addOnCompleteListener(this, new OnCompleteListener <AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task <AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    GoToLogin();
-                                    Toast.makeText(getApplicationContext(), "User registered successfull", Toast.LENGTH_SHORT).show();
-                                    loadingBar.dismiss();
-                                } else {
-                                    String message = task.getException().getMessage();
-                                    Toast.makeText(getApplicationContext(), "Error occured: "+message, Toast.LENGTH_SHORT).show();
-                                    loadingBar.dismiss();
-                                }
-                            }
-                        });
-
-                 }
-        }
-
-    private void GoToLogin() {
-        startActivity(new Intent(this, Login.class));
-    }
-
-    public boolean isConnected (Context context){
-
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netinfo = cm.getActiveNetworkInfo();
-
-            if (netinfo != null && netinfo.isConnectedOrConnecting()) {
-                android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-                if ((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting()))
-                    return true;
-                else return false;
-            } else
-                return false;
-        }
-
-        public AlertDialog.Builder buildDialog (Context c){
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(c);
-            builder.setTitle("No Internet Connection");
-            builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit");
-
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    ;
-
-                    // finish();
-                }
-            });
-
-            return builder;
-
-
-        }
-    }
+}
 
 
 

@@ -9,12 +9,12 @@
     <group>
         <item
             android:id="@+id/nav_report"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Report Water Breakage" />
+            android:icon="@drawable/ic_report_problem_black_24dp"
+            android:title="Report Leakage" />
         <item
             android:id="@+id/nav_view_reports"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="View Reorts" />
+            android:icon="@drawable/ic_pageview_black_24dp"
+            android:title="View Reports" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_person_black_24dp"
@@ -26,9 +26,9 @@
             android:title="Settings" />
 
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="Notifications" />
+            android:id="@+id/nav_chats"
+            android:icon="@drawable/ic_chat_black_24dp"
+            android:title="Chats" />
 
 
 
