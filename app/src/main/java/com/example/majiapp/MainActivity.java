@@ -28,8 +28,10 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener
 
+{
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mToggle;
     private DrawerLayout mDrawerLayout;
@@ -53,33 +55,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
         UserRef  = FirebaseDatabase.getInstance().getReference().child("users");
         TechnicianRef  = FirebaseDatabase.getInstance().getReference().child("technicians");
-
-
         postsRef = FirebaseDatabase.getInstance().getReference().child("Reports");
         current_user_ID = mAuth.getCurrentUser().getUid();
 
-        mToolbar = (Toolbar) findViewById(R.id.mainActivity_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Home");
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_activity);
-
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.nav_view);
+
         //inflate the layout
         navView = navigationView.inflateHeaderView(R.layout.header);
         NavProfileImage = (CircleImageView) navView.findViewById(R.id.nav_profile_image);
         navusername = (TextView) navView.findViewById(R.id.nav_username);
-
-        Report_button =(Button) findViewById(R.id.repport_water);
-        Apply_water_button = (Button) findViewById(R.id.apply_water);
-        View_Reports = (Button) findViewById(R.id.see_reports);
-
+       // Report_button =(Button) findViewById(R.id.repport_water);
+        //Apply_water_button = (Button) findViewById(R.id.apply_water);
+        //View_Reports = (Button) findViewById(R.id.see_reports);
         navigationView.setNavigationItemSelectedListener(this);
-
         Report_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -88,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 takeUserTouploadActivity();
             }
         });
-
 
         Apply_water_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 takeUserToReports();
             }
         });
-
 
         Report_button.setVisibility(View.INVISIBLE);
         Apply_water_button.setVisibility(View.INVISIBLE);
@@ -120,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     {
                         String fullname = dataSnapshot.child(current_user_ID).child("fullname").getValue().toString();
                         navusername.setText(fullname);
-
                     }else
                     {
                         Toast.makeText(MainActivity.this, "User has no username in the database",Toast.LENGTH_SHORT).show();
@@ -144,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(MainActivity.this, "Erooorrrrrrrrr",Toast.LENGTH_SHORT).show();
             }
         });
-
 
         //add profile image and username to the nav drawer
         TechnicianRef.addValueEventListener(new ValueEventListener()
@@ -182,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(MainActivity.this, "Erooorrrrrrrrr",Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
        // Displaybuttons();
 
@@ -260,14 +250,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                         CheckTechnicianExixtence();
 
-
                                 }else {
 
                                     CheckTechnicianExixtence();
                                     CheckuserExistence();
-
-
-
                                 }
 
                             }
@@ -440,8 +426,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_activity);
-        drawer.closeDrawer(GravityCompat.START);
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_activity);
+        //drawer.closeDrawer(GravityCompat.START);
 
         return true;
     }

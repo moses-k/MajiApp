@@ -101,7 +101,7 @@ public class UserRegister extends AppCompatActivity {
 
 
         final String User = "user";
-        Intent dashboardIntenet = new Intent(this, MainActivity.class);
+        Intent dashboardIntenet = new Intent(this, MapsActivity.class);
         dashboardIntenet.putExtra("Members", User);
         startActivity(dashboardIntenet);       }
 

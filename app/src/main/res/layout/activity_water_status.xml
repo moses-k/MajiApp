@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Water_status">
+
+
+    <include android:id="@+id/water_status_toolbar"
+        layout="@layout/toolbar">
+
+    </include>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:background="@color/cardview_shadow_start_color">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/status_water_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:text=" Water Apply Status"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/status_water_title"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="40dp"
+                android:hint="Status :"
+                android:padding="12dp"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/status_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/status"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="40dp"
+                android:hint="Name :"
+                android:padding="12dp"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/status_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/status_name"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="40dp"
+                android:hint="Email :"
+                android:padding="12dp"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/status_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/status_email"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="40dp"
+                android:hint="Date of application :"
+                android:padding="12dp"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

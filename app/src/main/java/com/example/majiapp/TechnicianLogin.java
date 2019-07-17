@@ -75,14 +75,14 @@ public class TechnicianLogin extends AppCompatActivity implements View.OnClickLi
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if(currentUser != null) {
-            sendUserToMainActivity();
+            sendUserToMapsActivity();
         }
     }
 
-    private void sendUserToMainActivity()
+    private void sendUserToMapsActivity()
     {
         final String User = "technician";
-        Intent mainIntent = new Intent(this, MainActivity.class);
+        Intent mainIntent = new Intent(this, MapsActivity.class);
         mainIntent.putExtra("Members", User);
         startActivity(mainIntent);
 
@@ -173,7 +173,7 @@ public class TechnicianLogin extends AppCompatActivity implements View.OnClickLi
                         {
                             if (task.isSuccessful())
                             {
-                                sendUserToMainActivity();
+                                sendUserToMapsActivity();
                                 Toast.makeText(getApplicationContext(),"User User_Login successfull",Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 

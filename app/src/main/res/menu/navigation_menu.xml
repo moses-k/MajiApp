@@ -16,6 +16,11 @@
             android:icon="@drawable/ic_pageview_black_24dp"
             android:title="View Reports" />
         <item
+        android:id="@+id/nav_apply_water"
+        android:icon="@drawable/ic_arrow_drop_down_circle_black_24dp"
+        android:title="Apply water" />
+
+        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="Profile" />

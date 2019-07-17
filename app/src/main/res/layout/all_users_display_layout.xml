@@ -8,8 +8,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/all_users_profile_image"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
         android:layout_margin="10dp"
         android:src="@drawable/profile_image"/>
     

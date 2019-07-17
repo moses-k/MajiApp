@@ -139,6 +139,19 @@
                 android:text="Apply"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/water_status"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/save_application"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/background_button"
+                android:text="Check Application status"
+                android:textSize="20sp"
+                android:textStyle="bold">
+
+            </Button>
         </RelativeLayout>
     </ScrollView>
 

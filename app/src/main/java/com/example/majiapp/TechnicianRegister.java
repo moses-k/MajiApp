@@ -107,7 +107,7 @@ public class TechnicianRegister extends AppCompatActivity {
     private void GoToMAinActivity() {
 
         final String User = "technician";
-        Intent gotosetupIntenet = new Intent(this, MainActivity.class);
+        Intent gotosetupIntenet = new Intent(this, MapsActivity.class);
         gotosetupIntenet.putExtra("Members", User);
         startActivity(gotosetupIntenet);
     }

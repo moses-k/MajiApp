@@ -364,7 +364,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void sendUserToDashbordActivity() {
-        Intent dashboardIntent = new Intent(SettingsActivity.this,MainActivity.class);
+        Intent dashboardIntent = new Intent(SettingsActivity.this,MapsActivity.class);
         startActivity(dashboardIntent);
     }
 

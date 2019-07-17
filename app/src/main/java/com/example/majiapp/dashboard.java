@@ -82,24 +82,16 @@ public class dashboard extends AppCompatActivity {
         postList.setLayoutManager(new LinearLayoutManager(this));
         postList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        //display new post at the top and old at the bottom
+        /**
+         *This line display new post at the top and old at the bottom
+         **/
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
        postList.setLayoutManager(linearLayoutManager);
        Add_post_Button = (Button) findViewById(R.id.post_button);
-
-
-      //  View navView = navigationView.inflateHeaderView(R.layout.header);
-      //  navView.findViewById(R.id.naigation_view);
-
-
-//app:headerLayout="@layout/header"
-
         mToolbar = (Toolbar) findViewById(R.id.nav_actionbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Report centre");
-
-        //display the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -122,8 +114,9 @@ public class dashboard extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        //check who the current user is either USER OR TECHNICIAN
-
+        /**
+         * This check who the current user is, Either a Technician or User
+         */
         UserRef.addValueEventListener(new ValueEventListener()
         {
             @Override
@@ -134,7 +127,6 @@ public class dashboard extends AppCompatActivity {
                     User = "user";
 
                 }else {
-
 
                     TechnicianRef.addValueEventListener(new ValueEventListener()
                     {
@@ -148,7 +140,6 @@ public class dashboard extends AppCompatActivity {
                             }
 
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -168,10 +159,13 @@ public class dashboard extends AppCompatActivity {
         DisplAllUsersPost();
     }
 
+    /***
+     * This methode displays all the users posts.
+     * With the help of firebase recycler Adapter to retrive all posts
+     */
 
     private void DisplAllUsersPost()
     {
-        //with the help of firebase recycler we will retrieve all the post
 //Posts.class, all_post_layout,PostViewHolder.class,postsRef
         FirebaseRecyclerOptions<Posts> options =
                 new FirebaseRecyclerOptions.Builder<Posts >()
@@ -184,7 +178,10 @@ public class dashboard extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Posts model)
                     {
-                        //get the key of that post and store in postkey
+                        /**
+                         * get the key of that post and store in postkey
+                          */
+
                         final String Postkey = getRef(position).getKey();
                       //  final String User  = getIntent().getExtras().get("Members").toString();
 
@@ -216,10 +213,6 @@ public class dashboard extends AppCompatActivity {
                             }
 
                         });
-
-
-
-
                     }
 
                     @NonNull
@@ -230,9 +223,6 @@ public class dashboard extends AppCompatActivity {
                         return viewHolder;
                     }
                 };
-
-
-                     // postList.setAdapter(firebaseRecyclerAdapter);
         postList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
@@ -312,7 +302,9 @@ public class dashboard extends AppCompatActivity {
         startActivity(new Intent(this, User_Login.class));
     }
 
-    //check for internet connectivity
+    /**
+     * Check for internet connectivity
+     */
     public boolean isConnected(Context context) {
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -328,7 +320,11 @@ public class dashboard extends AppCompatActivity {
         } else
             return false;
     }
-    //alert box
+
+    /**
+     * Alert box
+     */
+
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
@@ -346,8 +342,6 @@ public class dashboard extends AppCompatActivity {
         return builder;
     }
 
-
-
     public void onOptionsItemselected (Menu menu) {
         super.onOptionsMenuClosed(menu);
     }
@@ -355,8 +349,5 @@ public class dashboard extends AppCompatActivity {
     public void Login () {
         startActivity(new Intent(this, User_Login.class));
     }
-
-
-
 
 }

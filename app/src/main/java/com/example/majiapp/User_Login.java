@@ -97,7 +97,7 @@ public class User_Login extends AppCompatActivity implements View.OnClickListene
 
     private void sendUserToMainActivity()
     {
-        Intent mainActivityIntent = new Intent(User_Login.this, MainActivity.class);
+        Intent mainActivityIntent = new Intent(User_Login.this, MapsActivity.class);
         startActivity(mainActivityIntent);
     }
 
@@ -207,7 +207,7 @@ public class User_Login extends AppCompatActivity implements View.OnClickListene
     private void SendUserMainActivity() {
 
         final String User = "user";
-        Intent mainIntenet = new Intent(this, MainActivity.class);
+        Intent mainIntenet = new Intent(this, MapsActivity.class);
         mainIntenet.putExtra("Members", User);
         startActivity(mainIntenet);    }
 

@@ -428,7 +428,7 @@ public class SetupActivity extends AppCompatActivity {
 
 
 
-                if(Users.equals("user"))
+           if(Users.equals("user"))
                 {
 
                     UsersRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener()
@@ -483,13 +483,13 @@ public class SetupActivity extends AppCompatActivity {
 
     private void sendToHomeActivity () {
         final String User = "user";
-        Intent gotomainIntenet = new Intent(this, MainActivity.class);
+        Intent gotomainIntenet = new Intent(this, MapsActivity.class);
         gotomainIntenet.putExtra("Members", User);
         startActivity(gotomainIntenet);
     }
     private void sendToHomeActivity2 () {
         final String User = "technician";
-        Intent gotomainIntenet = new Intent(this, MainActivity.class);
+        Intent gotomainIntenet = new Intent(this, MapsActivity.class);
         gotomainIntenet.putExtra("Members", User);
         startActivity(gotomainIntenet);
     }

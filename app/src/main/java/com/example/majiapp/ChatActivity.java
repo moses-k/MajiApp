@@ -46,7 +46,6 @@ public class ChatActivity extends AppCompatActivity
     private final List<Messages> messagesList = new ArrayList <>();
     private LinearLayoutManager linearLayoutManager;
     private MessagesAdapter messageAdapter;
-
     private DatabaseReference rootRef,usersRef,technicianRef;
     private FirebaseAuth mAuth;
 
@@ -70,13 +69,9 @@ public class ChatActivity extends AppCompatActivity
         usersRef  = FirebaseDatabase.getInstance().getReference().child("users");
         technicianRef  = FirebaseDatabase.getInstance().getReference().child("technicians");
 
-
-
         //retrieve the sent info
         messageReceiverID = getIntent().getExtras().get("visitUserId").toString();
         messageReceiverName = getIntent().getExtras().get("userName").toString();
-
-
 
         InitialiseFields();
 
@@ -92,8 +87,6 @@ public class ChatActivity extends AppCompatActivity
         });
 
         FetchMessages();
-
-
     }
 
     private void FetchMessages()
@@ -140,7 +133,6 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
-
     // if started
     @Override
     protected void onStart()
@@ -155,7 +147,6 @@ public class ChatActivity extends AppCompatActivity
     {
         super.onStop();
         updateUserStatus("offline");
-
     }
     //if app crashes
     @Override
@@ -198,8 +189,6 @@ public class ChatActivity extends AppCompatActivity
             Calendar calFordTime = Calendar.getInstance();
             SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm aa");
             saveCurrentTime = currentTime.format(calFordTime.getTime());
-
-
             Map messageTextBody = new HashMap();
             messageTextBody.put("message", messageText);
             messageTextBody.put("time", saveCurrentTime);
