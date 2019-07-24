@@ -31,7 +31,8 @@
                android:textAlignment="textStart"
                android:textSize="18sp"
                android:textStyle="bold"
-               android:textColor="@color/backgroundcolor"/>
+               android:textColor="@color/backgroundcolor"
+               android:gravity="start" />
            <ImageView
                android:id="@+id/all_user_online_icon"
                android:layout_width="20dp"
@@ -47,7 +48,8 @@
            android:text="Status"
            android:textAlignment="textStart"
            android:textSize="16sp"
-           android:textColor="@color/backgroundcolor"/>
+           android:textColor="@color/backgroundcolor"
+           android:gravity="start" />
 
    </LinearLayout>
 

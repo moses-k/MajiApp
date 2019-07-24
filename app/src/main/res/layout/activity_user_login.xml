@@ -52,7 +52,8 @@ l
                     android:text="Login"
                     android:textColor="#fff"
                     android:textSize="30dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="NotSibling" />
 
                 <EditText
                     android:id="@+id/etEmail"

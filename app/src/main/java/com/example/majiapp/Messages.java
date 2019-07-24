@@ -3,7 +3,7 @@ package com.example.majiapp;
 
 public class Messages
 {
-    String date, time,message,type,from;
+    private String date, time,message,type,from;
 
 
     public Messages()
