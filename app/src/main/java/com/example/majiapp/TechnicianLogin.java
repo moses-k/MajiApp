@@ -82,7 +82,7 @@ public class TechnicianLogin extends AppCompatActivity implements View.OnClickLi
     private void sendUserToMapsActivity()
     {
         final String User = "technician";
-        Intent mainIntent = new Intent(this, MapsActivity.class);
+        Intent mainIntent = new Intent(this, dashboard.class);
         mainIntent.putExtra("Members", User);
         startActivity(mainIntent);
 

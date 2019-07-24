@@ -95,7 +95,7 @@ public class Apply_waterActivity extends AppCompatActivity {
                     AlertDialog.Builder ab = new AlertDialog.Builder(Apply_waterActivity.this);
                     ab.setTitle("confirm");
                     ab.setIcon(R.drawable.ic_launch_black_24dp);
-                    ab.setMessage("You have already applied for water please check on the status");
+                    ab.setMessage("You have already applied for water please check on the application review status");
 
                     ab.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -182,7 +182,7 @@ public class Apply_waterActivity extends AppCompatActivity {
                                             if(task.isSuccessful())
                                             {
 
-                                                Toast.makeText(Apply_waterActivity.this, "You have already applied for water, check the status ", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(Apply_waterActivity.this, "You have already applied for water, check the application review  status ", Toast.LENGTH_SHORT).show();
 
                                                 Intent selfIntent = new Intent(Apply_waterActivity.this,Apply_waterActivity.class);
                                                 startActivity(selfIntent);

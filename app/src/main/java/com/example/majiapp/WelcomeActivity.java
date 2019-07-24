@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -19,15 +20,15 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
-       // mAuth = FirebaseAuth.getInstance();
-       // UserRef  = FirebaseDatabase.getInstance().getReference().child("Users");
+        setContentView( R.layout.activity_welcomer );
+        mAuth = FirebaseAuth.getInstance();
+       UserRef  = FirebaseDatabase.getInstance().getReference().child("Users");
 
 
        new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
-                Intent homeIntent = new Intent(WelcomeActivity.this, User_Login.class );
+                Intent homeIntent = new Intent(WelcomeActivity.this, Splash_screen.class );
                 startActivity( homeIntent );
                 finish();
 

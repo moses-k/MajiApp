@@ -389,10 +389,6 @@ public class MainActivity extends AppCompatActivity implements
                 Intent settingIntent = new Intent(MainActivity.this,SettingsActivity.class);
                 startActivity(settingIntent);
                 break;
-            case R.id.nav_locate:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                        new LocateUsFragment()).commit();
-                break;
 
             case R.id.nav_logout:
                 AlertDialog.Builder ab = new AlertDialog.Builder(MainActivity.this);

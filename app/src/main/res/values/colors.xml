@@ -3,24 +3,6 @@
     <color name="colorPrimary">#00BFFF</color>
     <color name="colorPrimaryDark">#0000ff</color>
     <color name="backgroundcolor">#FCFCFC</color>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <color name="colorAccent">#D81B60</color>
     <color name="blue">#0000ff</color>
     <color name="lightgray">#ededed</color>
@@ -36,6 +18,10 @@
     <color name="colorProfile">#3B4041</color>
     <color name="darkgray">#A9A9A9</color>
     <color name="sendercolor">#A0179E</color>
+    <color name="black">#000000</color>
+
+
+
 
 
 

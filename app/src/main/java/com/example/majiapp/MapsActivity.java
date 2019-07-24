@@ -96,10 +96,10 @@ private Marker mBoganiK_Ltd;
 private Marker mMotorZone_AutoRepair_Shop;
 private Marker mKobil_Koinange;
 
-        String phone = "0721330877";
+        String phone = "0724819674";
         String JDM = "0791062710";
         String Bogani = "0735558853";
-        String other = "0736 225692";
+        String other = "0731403236";
         String Oil_Libya ="0722 899202";
         String Sonon_Benz="0722 519688";
         String Kobil_Koinange_c="020 2755000";
@@ -728,7 +728,7 @@ private Marker mKobil_Koinange;
         //New marker
         mStation_AutoMech = mMap.addMarker (new MarkerOptions ()
                 .position (Vinny_Plumbers)
-                .title ("Steve Nyambega Repair ")
+                .title ("JOjo water Repair ")
                 .icon (BitmapDescriptorFactory.defaultMarker (BitmapDescriptorFactory.HUE_RED)));
         mMap.animateCamera (CameraUpdateFactory.zoomBy (10));
         mStation_AutoMech.setTag (0);
@@ -861,9 +861,6 @@ private Marker mKobil_Koinange;
                 Intent settingIntent = new Intent(MapsActivity.this,SettingsActivity.class);
                 startActivity(settingIntent);
                 break;
-            case R.id.nav_locate:
-                Toast.makeText(MapsActivity.this, "Our developers are working on it. Sorry temporarily out of service", Toast.LENGTH_SHORT).show();
-
             case R.id.nav_logout:
                 AlertDialog.Builder ab = new AlertDialog.Builder(MapsActivity.this);
                 ab.setTitle("confirm");
